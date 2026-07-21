@@ -1,33 +1,36 @@
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
-
-
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author Adm
- */
 public class conectaDAO {
     
-    public Connection connectDB(){
+    public Connection connectDB() {
         Connection conn = null;
         
         try {
-        
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/uc11?user=root&password=");
+            // Tenta carregar o driver JDBC do MySQL
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+            } catch (ClassNotFoundException e) {
+                Class.forName("com.mysql.jdbc.Driver");
+            }
             
-        } catch (SQLException erro){
-            JOptionPane.showMessageDialog(null, "Erro ConectaDAO" + erro.getMessage());
+            // Conexão apontando para o banco uc11 na porta 3306
+            String url = "jdbc:mysql://127.0.0.1:3306/uc11?useSSL=false&allowPublicKeyRetrieval=true";
+            String usuario = "root";
+            String senha = "1234"; // Senha informada
+            
+            conn = DriverManager.getConnection(url, usuario, senha);
+            
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null, 
+                "ERRO DE DRIVER: O Driver JDBC não foi encontrado.\n" + e.getMessage());
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+                "ERRO DE CONEXÃO MYSQL: " + e.getMessage());
         }
+        
         return conn;
     }
-    
 }
